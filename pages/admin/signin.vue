@@ -26,8 +26,10 @@ export default {
         .auth()
         .signInWithEmailAndPassword(this.email, this.password)
         .then(user => {
+          // const currentUser = firebase.auth().currentUser
+          this.$store.commit('setCurrentUser', { currentUser: 'set' }) // todo
           // ログインしたら飛ぶページを指定
-          // this.$router.push("/member-page")
+          this.$router.push('/admin')
         })
         .catch(error => {
           alert(error)
