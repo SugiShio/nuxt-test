@@ -5,7 +5,14 @@
         el-col(:span='4') HEADER
         el-col(
         :span='4'
-        ) {{ displayLabel }}
+        )
+          el-dropdown(trigger='click')
+            span {{ user }}
+            el-dropdown-menu(slot='dropdown')
+              el-dropdown-item
+                span(
+                @click='signout'
+                ) ログアウト
     el-main
       nuxt
 </template>
@@ -14,7 +21,7 @@
 import firebase from '~/plugins/firebase'
 export default {
   computed: {
-    displayLabel() {
+    user() {
       const user = this.$store.getters.user
       if (!user) return
       return user.displayName || user.email
@@ -25,6 +32,12 @@ export default {
       this.$store.dispatch('setUser', { user })
     })
     if (!this.user) {
+      this.$router.push('/admin/signin')
+    }
+  },
+  methods: {
+    signout() {
+      firebase.auth().signOut()
       this.$router.push('/admin/signin')
     }
   }
