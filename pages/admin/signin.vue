@@ -7,28 +7,36 @@ el-card.card
       el-input(v-model='password' show-password)
     el-row(type='flex' justify='center')
       el-col(:span='10')
-        el-button.button(@click='singin')
+        el-button.button(@click='signin')
           | ログイン
 </template>
 
 <script>
 import firebase from '~/plugins/firebase'
 export default {
+  layout: 'admin',
   data() {
     return {
       email: '',
       password: ''
     }
   },
+  computed: {
+    user() {
+      return this.$store.getters.user
+    }
+  },
+  watch: {
+    user(value) {
+      if (value) this.$router.push('/admin')
+    }
+  },
   methods: {
-    singin() {
+    signin() {
       firebase
         .auth()
         .signInWithEmailAndPassword(this.email, this.password)
         .then(user => {
-          // const currentUser = firebase.auth().currentUser
-          this.$store.commit('setCurrentUser', { currentUser: 'set' }) // todo
-          // ログインしたら飛ぶページを指定
           this.$router.push('/admin')
         })
         .catch(error => {
