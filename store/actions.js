@@ -1,9 +1,7 @@
 export default {
   setUser({ commit }, payload) {
-    if (payload.user) {
-      const email = payload.user.email
-      const displayName = payload.user.displayName
-      commit('setUser', { email, displayName })
-    } else commit('setUser')
+    const email = payload.user ? payload.user.email : null
+    const displayName = payload.user ? payload.user.displayName : null
+    commit('setUser', { email, displayName })
   }
 }

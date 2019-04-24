@@ -7,38 +7,47 @@
         :span='4'
         )
           el-dropdown(trigger='click')
-            span {{ user }}
+            span {{ displayName }}
             el-dropdown-menu(slot='dropdown')
               el-dropdown-item
                 span(
                 @click='signout'
                 ) ログアウト
     el-main
-      nuxt
+      template(v-if='!isLoading')
+        nuxt(v-if='isSignin')
+        signin(v-else)
 </template>
 
 <script>
 import firebase from '~/plugins/firebase'
+import signin from '~/components/signin'
 export default {
+  components: { signin },
   computed: {
     user() {
-      const user = this.$store.getters.user
-      if (!user) return
-      return user.displayName || user.email
+      return this.$store.getters.user
+    },
+    displayName() {
+      if (!this.user) return ''
+      return this.user.displayName || this.user.email
+    },
+    isSignin() {
+      return this.$store.getters.isSignin
+    },
+    isLoading() {
+      return !this.user
     }
   },
-  async created() {
-    await firebase.auth().onAuthStateChanged(user => {
+  created() {
+    firebase.auth().onAuthStateChanged(user => {
       this.$store.dispatch('setUser', { user })
     })
-    if (!this.user) {
-      this.$router.push('/admin/signin')
-    }
   },
   methods: {
     signout() {
       firebase.auth().signOut()
-      this.$router.push('/admin/signin')
+      this.$router.push('/admin')
     }
   }
 }

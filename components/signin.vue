@@ -7,7 +7,10 @@ el-card.card
       el-input(v-model='password' show-password)
     el-row(type='flex' justify='center')
       el-col(:span='10')
-        el-button.button(@click='signin')
+        el-button.button(
+        @click='signin'
+        :disabled='!email||!password'
+        )
           | ログイン
 </template>
 
@@ -19,16 +22,6 @@ export default {
     return {
       email: '',
       password: ''
-    }
-  },
-  computed: {
-    user() {
-      return this.$store.getters.user
-    }
-  },
-  watch: {
-    user(value) {
-      if (value) this.$router.push('/admin')
     }
   },
   methods: {
